@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,24 @@ public class AccountService {
         Account savedAccount = accountRepository.save(account);
 
         return toResponse(savedAccount);
+    }
+
+
+    public List<AccountResponse> findAll() {
+
+        return accountRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public AccountResponse findById(Long id) {
+
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Account not found."));
+
+        return toResponse(account);
     }
 
     private AccountResponse toResponse(Account account) {
