@@ -1,5 +1,6 @@
 package io.github.csruas.bank.digital_bank_api.account.service;
 
+import io.github.csruas.bank.digital_bank_api.account.dto.TransactionResponse;
 import io.github.csruas.bank.digital_bank_api.account.dto.TransferRequest;
 import io.github.csruas.bank.digital_bank_api.account.dto.TransferResponse;
 import io.github.csruas.bank.digital_bank_api.account.entity.Account;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +60,28 @@ public class TransactionService {
                 savedTransaction.getAmount(),
                 savedTransaction.getStatus(),
                 savedTransaction.getCreatedAt()
+        );
+    }
+
+    public List<TransactionResponse> findByAccountId(Long accountId) {
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found."));
+
+        return transactionRepository
+                .findBySourceAccountIdOrTargetAccountIdOrderByCreatedAtDesc(accountId, accountId)
+                .stream()
+                .map(this::toTransactionResponse)
+                .toList();
+    }
+
+    private TransactionResponse toTransactionResponse(Transaction transaction) {
+        return new TransactionResponse(
+                transaction.getId(),
+                transaction.getSourceAccountId(),
+                transaction.getTargetAccountId(),
+                transaction.getAmount(),
+                transaction.getStatus(),
+                transaction.getCreatedAt()
         );
     }
 }

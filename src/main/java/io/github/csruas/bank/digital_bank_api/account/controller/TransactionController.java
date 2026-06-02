@@ -1,5 +1,6 @@
 package io.github.csruas.bank.digital_bank_api.account.controller;
 
+import io.github.csruas.bank.digital_bank_api.account.dto.TransactionResponse;
 import io.github.csruas.bank.digital_bank_api.account.dto.TransferRequest;
 import io.github.csruas.bank.digital_bank_api.account.dto.TransferResponse;
 import io.github.csruas.bank.digital_bank_api.account.service.TransactionService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Transfers", description = "Money transfer endpoints")
 @RestController
@@ -23,5 +26,11 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     public TransferResponse transfer(@Valid @RequestBody TransferRequest request) {
         return transactionService.transfer(request);
+    }
+
+    @Operation(summary = "List transactions by account ID")
+    @GetMapping("/accounts/{accountId}")
+    public List<TransactionResponse> findByAccountId(@PathVariable Long accountId) {
+        return transactionService.findByAccountId(accountId);
     }
 }
