@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: digital-bank-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/digital_bank
+    username: digital_bank
+    password: digital_bank
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+server:
+  port: 8080

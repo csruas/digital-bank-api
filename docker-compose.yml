@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: digital-bank-postgres
+    environment:
+      POSTGRES_DB: digital_bank
+      POSTGRES_USER: digital_bank
+      POSTGRES_PASSWORD: digital_bank
+    ports:
+      - "5433:5432"
+    volumes:
+      - digital_bank_data:/var/lib/postgresql/data
+
+volumes:
+  digital_bank_data:
