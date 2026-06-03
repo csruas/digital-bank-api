@@ -20,6 +20,7 @@ public class TransactionService {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final NotificationService notificationService;
 
     @Transactional
     public TransferResponse transfer(TransferRequest request) {
@@ -52,6 +53,12 @@ public class TransactionService {
                 .build();
 
         Transaction savedTransaction = transactionRepository.save(transaction);
+
+        notificationService.notifyTransferCompleted(
+                sourceAccount,
+                targetAccount,
+                savedTransaction
+        );
 
         return new TransferResponse(
                 savedTransaction.getId(),
